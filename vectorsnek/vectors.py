@@ -1,4 +1,4 @@
-# ---------------------------------------------------------------------------
+#  --------------------------------------------------------------------------
 #   PROJECT       : VectorSnek
 #   AUTHOR        : Thomas R. Stucky
 #   FILENAME      : vectors.py
@@ -20,7 +20,8 @@
 #  GNU General Public License for more details.
 # 
 #  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <https://www.gnu.org/licenses/>. ---------------------------------------------------------------------------
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>. 
+#  ---------------------------------------------------------------------------
 
 import math
 
@@ -40,6 +41,9 @@ class Vector:
 
     def __str__(self):
         return str(tuple(self.arr))
+
+    def __repr__(self):
+        return self.__str__()
 
     def magnitude(self):
         return math.sqrt(self.dot(self))
@@ -172,5 +176,12 @@ def dot_product(v1, v2):
     return v1 * v2
 
 def cross_product(v1, v2):
-    print("STUBBED")
-    return None
+    assert len(v1) == len(v2), "Vectors must be of the same dimension"
+    arr = list()
+    if len(v1) == 3:
+        arr.append(v1[1] * v2[2] - v1[2] * v2[1])
+        arr.append(v1[2] * v2[0] - v1[0] * v2[2])
+        arr.append(v1[0] * v2[1] - v1[1] * v2[0])
+        return Vector(arr)
+    else:
+        raise ValueError("Vectors are of an unsupported dimension for the cross product")

@@ -2,13 +2,26 @@
 
 import unittest
 import math
+import sys 
+import io
 
 from vectorsnek import vectors
 
 class TestVectors(unittest.TestCase):
     def test____str__(self):
         v1 = vectors.Vector([4,9,1])
-        self.assertEqual(v1.__str__(), "(4, 9, 1)")
+        self.assertEqual(str(v1), "(4, 9, 1)")
+
+    def test___repr__(self):
+        v1 = vectors.Vector([4,9,1])
+        # change output buffer
+        old_stdout = sys.stdout
+        sys.stdout = buffer = io.StringIO()
+        print(v1)
+        # restore output buffer
+        sys.stdout = old_stdout
+        # test if output representation worked
+        self.assertEqual(buffer.getvalue(), "(4, 9, 1)\n")
 
     def test_magnitude(self):
         v1 = vectors.Vector([3,-4])
@@ -130,6 +143,24 @@ class TestVectors(unittest.TestCase):
         v1 = vectors.Vector([5, 6, -7, 3])
         for a, b in zip(reversed(l1), reversed(v1)):
             self.assertEqual(a, b)
+
+class TestGlobalsFunctions(unittest.TestCase):
+    
+    def test___cross_product(self):
+        # computation test
+        v1 = vectors.Vector([2, -5, 1])
+        v2 = vectors.Vector([-8, 2, -2])
+        self.assertEqual(vectors.cross_product(v1, v2), vectors.Vector([8, -4, -36]))
+        # ValueError test
+        v3 = vectors.Vector([6,-2])
+        v4 = vectors.Vector([0, 1])
+        with self.assertRaises(ValueError):
+            # wrong dimension for cross product
+            v5 = vectors.cross_product(v3, v4)
+        # AssertionErorr test
+        with self.assertRaises(AssertionError):
+            # different dimension vectors
+            v4 = vectors.cross_product(v2, v3)
 
 if __name__ == '__main__':
     unittest.main()
