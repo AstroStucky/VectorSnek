@@ -25,6 +25,8 @@
 
 import math
 
+__all__ = ['Vector', 'dot_product', 'cross_product']
+
 class Vector:
     def __init__(self, value):
         if isinstance(value, Vector):
