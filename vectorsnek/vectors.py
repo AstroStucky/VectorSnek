@@ -25,9 +25,15 @@
 
 import math
 
-__all__ = ['Vector', 'dot_product', 'cross_product']
+__all__ = ['Vector']
 
-class Vector(object):
+class Vector(object):   
+
+    # TODO:
+    #  1. support cross product for 7 dimensions, and more if they exist
+    #  2. add hat vectors factories for xyzw
+    #  3. support matrix-vector multiplication
+
     def __init__(self, value):
         if isinstance(value, Vector):
             self._arr = value._arr
@@ -47,7 +53,6 @@ class Vector(object):
     @property
     def x(self):
         return self[0]
-
     @x.setter
     def x(self, value):
         self[0] = value
@@ -85,28 +90,54 @@ class Vector(object):
     @classmethod
     def zeros(cls, dimension):
         if dimension < 0:
-            raise ValueError('Dimension must be greater than 0!')
+            raise ValueError('Dimension must be greater than 0')
         return Vector([0] * dimension)
-    # TODO: add hat vectors for x,y,z,w
 
     ### Common vector operations
+
+    def norm(self, p):
+        if p < 1:
+            raise ValueError("The p-norm is not defined for p < 1")
+        if p == math.inf:
+            return max([abs(x) for x in self])
+        sum_ = 0
+        for a in self._arr:
+            sum_ += abs(a)**p
+        return sum_**(1.0/p)
 
     def magnitude(self):
         return math.sqrt(self.dot(self))
 
-    def dot(self, other):
-        sum_ = 0
-        for a, b in zip(self._arr, other._arr):
-            sum_ += a * b
-        return sum_
-
-    def scalar_multiplication(self, other):
+    def scalar_multiply(self, other):
         result = Vector([] * self._dim)
         for a, c in zip(self._arr, result._arr):
             c = a * other
         return result
+
+    ## vector products
+
+    def dot(self, other):
+        if self._dim != other._dim:
+            raise ValueError("Vectors must be of the same dimension")
+        sum_ = 0
+        for a, b in zip(self._arr, other._arr):
+            sum_ += a * b
+        return sum_
+        
+    def cross(self, other):
+        if self._dim != other._dim:
+            raise ValueError("Vectors must be of the same dimension.")
+        arr = list()
+        if self._dim == 3:
+            arr.append(self.y * other.z - self.z * other.y)
+            arr.append(self.z * other.x - self.x * other.z)
+            arr.append(self.x * other.y - self.y * other.x)
+            return Vector(arr)
+        else:
+            raise ValueError("Unsupported/undefined dimension for the cross product.")
     
     ### operator overloading
+ 
     ## binary
 
     def __add__(self, other):
@@ -122,16 +153,15 @@ class Vector(object):
         return result
 
     def __mul__(self, other):
-        # TODO: support matrix multiplication
         if isinstance(other, Vector):
             return self.dot(other)
         else:
             # LHS scalar multiplication
-            return self.scalar_multiplication(other)
+            return self.scalar_multiply(other)
 
     # RHS scalar multiplication
     def __rmul__(self, scalar):
-        return self.scalar_multiplication(scalar)
+        return self.scalar_multiply(scalar)
 
     ## comparison
 
@@ -159,7 +189,7 @@ class Vector(object):
         if isinstance(other, Vector):
             return self.dot(other)
         else:
-            return self.scalar_multiplication(other)
+            return self.scalar_multiply(other)
 
     ## unary
 
@@ -197,7 +227,7 @@ class Vector(object):
             b = math.trunc(a)
         return result
 
-    ### container defines
+    ### container definitions
 
     def __len__(self):
         return self._dim
@@ -217,17 +247,3 @@ class Vector(object):
 
     def __reversed__(self):
         return reversed(self._arr)
-
-def dot_product(v1, v2):
-    return v1 * v2
-
-def cross_product(v1, v2):
-    assert len(v1) == len(v2), "Vectors must be of the same dimension"
-    arr = list()
-    if len(v1) == 3:
-        arr.append(v1[1] * v2[2] - v1[2] * v2[1])
-        arr.append(v1[2] * v2[0] - v1[0] * v2[2])
-        arr.append(v1[0] * v2[1] - v1[1] * v2[0])
-        return Vector(arr)
-    else:
-        raise ValueError("Vectors are of an unsupported dimension for the cross product")
