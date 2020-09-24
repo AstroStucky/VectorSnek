@@ -32,6 +32,9 @@ class Vector(object):
     # TODO:
     #  1. support cross product for 7 dimensions, and more if they exist
     #  2. support matrix-vector multiplication
+    #  3. compress some for loops to single line
+    #  4. internally use self as a container
+    #  5. generalize rotation for all dimensions (#2 required)
 
     def __init__(self, value):
         if isinstance(value, Vector):
@@ -104,6 +107,16 @@ class Vector(object):
         result = Vector([] * self._dim)
         for a, c in zip(self._arr, result._arr):
             c = a * other
+        return result
+
+    def rotated(self, *args):
+        result = Vector.zeros(self._dim)
+        if self._dim == 2:
+            theta = args[0]
+            result.x = self.x * math.cos(theta) - self.y * math.sin(theta)
+            result.y = self.x * math.sin(theta) + self.y * math.cos(theta)
+        else:
+            raise ValueError("Unsupported dimensions for the .rotated() member function. Feel free to yell at me on GitHub to support more!")
         return result
 
     ## vector products

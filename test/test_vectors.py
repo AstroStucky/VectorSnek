@@ -70,6 +70,16 @@ class TestVectors(unittest.TestCase):
         v1 = Vector([2,-3])
         self.assertEqual(v1.scalar_multiply(5), Vector([10, -15]))
 
+    def test_rotated(self):
+        v1 = Vector([1,0])
+        v2 = v1.rotated(3 * math.pi / 4)
+        self.assertAlmostEqual(v2.x, -math.sqrt(2)/2)
+        self.assertAlmostEqual(v2.y, math.sqrt(2)/2)
+        # ValueError test
+        v3 = Vector([0, 2, 3])
+        with self.assertRaises(ValueError):
+            v4 = v3.rotated(math.pi)
+
     def test_dot(self):
         v1 = Vector([10, 2, 3])
         v2 = Vector([2, 3, 1])
