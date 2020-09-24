@@ -31,8 +31,7 @@ class Vector(object):
 
     # TODO:
     #  1. support cross product for 7 dimensions, and more if they exist
-    #  2. add hat vectors factories for xyzw
-    #  3. support matrix-vector multiplication
+    #  2. support matrix-vector multiplication
 
     def __init__(self, value):
         if isinstance(value, Vector):
@@ -77,7 +76,7 @@ class Vector(object):
     @w.setter
     def w(self, value):
         self[3] = value
-        
+
     ### Factories for common vectors 
 
     @classmethod
