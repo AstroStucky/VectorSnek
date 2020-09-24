@@ -77,14 +77,7 @@ class Vector(object):
     @w.setter
     def w(self, value):
         self[3] = value
-
-    ## Color values (r, g, b, a) 
-    # can simply be aliased with their cartesian counterpart
-    r = x
-    g = y
-    b = z
-    a = w
-
+        
     ### Factories for common vectors 
 
     @classmethod

@@ -41,24 +41,6 @@ class TestVectors(unittest.TestCase):
         self.assertEqual(v1[2], 180)
         self.assertEqual(v1[3], -9)
 
-    def test_rgbaget(self):
-        v1 = Vector([62, 52, 76, 3])
-        self.assertEqual(v1.r, v1[0])
-        self.assertEqual(v1.g, v1[1])
-        self.assertEqual(v1.b, v1[2])
-        self.assertEqual(v1.a, v1[3])
-
-    def test_rgbaset(self):
-        v1 = Vector([None] * 4)
-        v1.x = -20
-        v1.y = 19
-        v1.z = 180
-        v1.w = -9
-        self.assertEqual(v1[0], -20)
-        self.assertEqual(v1[1], 19)
-        self.assertEqual(v1[2], 180)
-        self.assertEqual(v1[3], -9)
-
     def test_zeros(self):
         v1 = Vector.zeros(5)
         self.assertEqual(v1, Vector([0,0,0,0,0]))
