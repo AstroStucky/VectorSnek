@@ -27,38 +27,82 @@ import math
 
 __all__ = ['Vector', 'dot_product', 'cross_product']
 
-class Vector:
+class Vector(object):
     def __init__(self, value):
         if isinstance(value, Vector):
-            self.arr = value.arr
-            self._dim = len(self.arr)
+            self._arr = value._arr
+            self._dim = value._dim
         else:        
-            self.arr = list(value)
-            self._dim = len(self.arr)
-
-    def __setattr__(self, name, value):
-        if name == 'arr':
-            self.__dict__['_dim'] = len(value)
-        self.__dict__[name] = value
+            self._arr = list(value)
+            self._dim = len(self._arr)
 
     def __str__(self):
-        return str(tuple(self.arr))
+        return str(tuple(self._arr))
 
     def __repr__(self):
         return self.__str__()
+
+    ### Common accessors and setters for vectors
+    ## cartesian up to 4 dimensions (x, y, z, w)
+    @property
+    def x(self):
+        return self[0]
+
+    @x.setter
+    def x(self, value):
+        self[0] = value
+
+    @property
+    def y(self):
+        return self[1]
+    @y.setter
+    def y(self, value):
+        self[1] = value
+
+    @property
+    def z(self):
+        return self[2]
+    @z.setter
+    def z(self, value):
+        self[2] = value
+
+    @property
+    def w(self):
+        return self[3]
+    @w.setter
+    def w(self, value):
+        self[3] = value
+
+    ## Color values (r, g, b, a) 
+    # can simply be aliased with their cartesian counterpart
+    r = x
+    g = y
+    b = z
+    a = w
+
+    ### Factories for common vectors 
+
+    @classmethod
+    def zeros(cls, dimension):
+        if dimension < 0:
+            raise ValueError('Dimension must be greater than 0!')
+        return Vector([0] * dimension)
+    # TODO: add hat vectors for x,y,z,w
+
+    ### Common vector operations
 
     def magnitude(self):
         return math.sqrt(self.dot(self))
 
     def dot(self, other):
         sum_ = 0
-        for a, b in zip(self.arr, other.arr):
+        for a, b in zip(self._arr, other._arr):
             sum_ += a * b
         return sum_
 
     def scalar_multiplication(self, other):
         result = Vector([] * self._dim)
-        for a, c in zip(self.arr, result.arr):
+        for a, c in zip(self._arr, result._arr):
             c = a * other
         return result
     
@@ -67,13 +111,13 @@ class Vector:
 
     def __add__(self, other):
         result = Vector([] * self._dim)
-        for a, b, c in zip(self.arr, other.arr, result.arr):
+        for a, b, c in zip(self._arr, other._arr, result._arr):
             c = a + b
         return result
 
     def __sub__(self, other):
         result = Vector([] * self._dim)
-        for a, b, c in zip(self.arr, other.arr, result.arr):
+        for a, b, c in zip(self._arr, other._arr, result._arr):
             c = a - b
         return result
 
@@ -92,7 +136,7 @@ class Vector:
     ## comparison
 
     def __eq__(self, other):
-        return all([a == b for a, b in zip(self.arr, other.arr)])
+        return all([a == b for a, b in zip(self._arr, other._arr)])
 
     def __ne__(self, other):
         return ~self.__eq__(other)
@@ -101,13 +145,13 @@ class Vector:
 
     def __iadd__(self, other):
         result = Vector([] * self._dim)
-        for a, b, c in zip(self.arr, other.arr, result.arr):
+        for a, b, c in zip(self._arr, other._arr, result._arr):
             c = a + b
         return result
 
     def __isub__(self, other):
         result = Vector([] * self._dim)
-        for a, b, c in zip(self.arr, other.arr, result.arr):
+        for a, b, c in zip(self._arr, other._arr, result._arr):
             c = a - b
         return result
 
@@ -125,31 +169,31 @@ class Vector:
 
     def __neg__(self):
         result = Vector([] * self._dim)
-        for a, b in zip(self.arr, result.arr):
+        for a, b in zip(self._arr, result._arr):
             b = -a
         return result
 
     def __round__(self, n):
         result = Vector([] * self._dim)
-        for a, b in zip(self.arr, result.arr):
+        for a, b in zip(self._arr, result._arr):
             b = math.round(a, n)
         return result
 
     def __floor__(self):
         result = Vector([] * self._dim)
-        for a, b in zip(self.arr, result.arr):
+        for a, b in zip(self._arr, result._arr):
             b = math.floor(a)
         return result
 
     def __ceil__(self):
         result = Vector([] * self._dim)
-        for a, b in zip(self.arr, result.arr):
+        for a, b in zip(self._arr, result._arr):
             b = math.ceil(a)
         return result
 
     def __trunc__(self):
         result = Vector([] * self._dim)
-        for a, b in zip(self.arr, result.arr):
+        for a, b in zip(self._arr, result._arr):
             b = math.trunc(a)
         return result
 
@@ -159,20 +203,20 @@ class Vector:
         return self._dim
 
     def __getitem__(self, key):
-        return self.arr[key]
+        return self._arr[key]
 
     def __setitem__(self, key, value):
-        self.arr[key] = value
+        self._arr[key] = value
 
     def __delitem__(self, key):
-        del self.arr[key]
-        self._dim = len(self.arr)
+        del self._arr[key]
+        self._dim = len(self._arr)
 
     def __iter__(self):
-        return iter(self.arr)
+        return iter(self._arr)
 
     def __reversed__(self):
-        return reversed(self.arr)
+        return reversed(self._arr)
 
 def dot_product(v1, v2):
     return v1 * v2
