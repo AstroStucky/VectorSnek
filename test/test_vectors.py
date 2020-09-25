@@ -179,9 +179,9 @@ class TestVectors(unittest.TestCase):
         v1 = Vector([2.51, -3.2])
         self.assertEqual(math.ceil(v1), Vector([3.0, -3.0]))
 
-    def test___trun__(self):
+    def test___trunc__(self):
         v1 = Vector([2.51, -3.2])
-        self.assertEqual(math.trunc(v1), Vector([0.51, 0.2]))
+        self.assertEqual(math.trunc(v1), Vector([2, -3]))
 
     def test___len__(self):
         v1 = Vector([1,2,3,4])

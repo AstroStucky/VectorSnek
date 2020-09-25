@@ -32,9 +32,8 @@ class Vector(object):
     # TODO:
     #  1. support cross product for 7 dimensions, and more if they exist
     #  2. support matrix-vector multiplication
-    #  3. compress some for loops to single line
-    #  4. internally use self as a container
-    #  5. generalize rotation for all dimensions (#2 required)
+    #  3. internally use self as a container
+    #  4. generalize rotation for all dimensions (#2 required)
 
     def __init__(self, value):
         if isinstance(value, Vector):
@@ -104,10 +103,7 @@ class Vector(object):
         return math.sqrt(self.dot(self))
 
     def scalar_multiply(self, other):
-        result = Vector([] * self._dim)
-        for a, c in zip(self._arr, result._arr):
-            c = a * other
-        return result
+        return Vector([a * other for a in self._arr])
 
     def rotated(self, *args):
         result = Vector.zeros(self._dim)
@@ -146,16 +142,10 @@ class Vector(object):
     ## binary
 
     def __add__(self, other):
-        result = Vector([] * self._dim)
-        for a, b, c in zip(self._arr, other._arr, result._arr):
-            c = a + b
-        return result
+        return Vector([a + b for a, b in zip(self._arr, other._arr)])
 
     def __sub__(self, other):
-        result = Vector([] * self._dim)
-        for a, b, c in zip(self._arr, other._arr, result._arr):
-            c = a - b
-        return result
+        return Vector([a - b for a, b in zip(self._arr, other._arr)])
 
     def __mul__(self, other):
         if isinstance(other, Vector):
@@ -179,22 +169,13 @@ class Vector(object):
     ## augmented assignment
 
     def __iadd__(self, other):
-        result = Vector([] * self._dim)
-        for a, b, c in zip(self._arr, other._arr, result._arr):
-            c = a + b
-        return result
+        return self.__add__(other)
 
     def __isub__(self, other):
-        result = Vector([] * self._dim)
-        for a, b, c in zip(self._arr, other._arr, result._arr):
-            c = a - b
-        return result
+        return self.__sub__(other)
 
     def __imul__(self, other):
-        if isinstance(other, Vector):
-            return self.dot(other)
-        else:
-            return self.scalar_multiply(other)
+        return self.__mul__(other)
 
     ## unary
 
@@ -203,34 +184,19 @@ class Vector(object):
         return self
 
     def __neg__(self):
-        result = Vector([] * self._dim)
-        for a, b in zip(self._arr, result._arr):
-            b = -a
-        return result
+        return Vector([-a for a in self._arr])
 
     def __round__(self, n):
-        result = Vector([] * self._dim)
-        for a, b in zip(self._arr, result._arr):
-            b = math.round(a, n)
-        return result
+        return Vector([round(a) for a in self._arr])
 
     def __floor__(self):
-        result = Vector([] * self._dim)
-        for a, b in zip(self._arr, result._arr):
-            b = math.floor(a)
-        return result
+        return Vector([math.floor(a) for a in self._arr])
 
     def __ceil__(self):
-        result = Vector([] * self._dim)
-        for a, b in zip(self._arr, result._arr):
-            b = math.ceil(a)
-        return result
+        return Vector([math.ceil(a) for a in self._arr])
 
     def __trunc__(self):
-        result = Vector([] * self._dim)
-        for a, b in zip(self._arr, result._arr):
-            b = math.trunc(a)
-        return result
+        return Vector([math.trunc(a) for a in self._arr])
 
     ### container definitions
 
